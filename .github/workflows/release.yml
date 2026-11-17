@@ -44,8 +44,8 @@ jobs:
           mv "$archive" "dsh-grid-panel-${version}.tgz"
           cp "${{ steps.attest.outputs.bundle-path }}" "dsh-grid-panel-${version}.sigstore.json"
           jq -c '.dsseEnvelope' "dsh-grid-panel-${version}.sigstore.json" > "dsh-grid-panel-${version}.intoto.jsonl"
-          gh release create "$GITHUB_REF_NAME" --prerelease --generate-notes || true
-          gh release upload "$GITHUB_REF_NAME" \
+          gh release create "$GITHUB_REF_NAME" --repo "${{ github.repository }}" --prerelease --generate-notes || true
+          gh release upload "$GITHUB_REF_NAME" --repo "${{ github.repository }}" \
             "dsh-grid-panel-${version}.tgz" \
             "dsh-grid-panel-${version}.sigstore.json" \
             "dsh-grid-panel-${version}.intoto.jsonl" \
