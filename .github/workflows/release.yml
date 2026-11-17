@@ -22,7 +22,7 @@ jobs:
       id-token: write
       attestations: write
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: dsh-grid-panel-${{ github.sha }}
       - name: Attest build provenance
@@ -55,7 +55,7 @@ jobs:
       - name: Update npm for trusted publishing
         run: npm install --global npm@latest
       - name: Download validated archive
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: dsh-grid-panel-${{ github.sha }}
       - name: Publish with provenance
