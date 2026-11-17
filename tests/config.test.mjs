@@ -24,7 +24,7 @@ test('resolves defaults, boundaries, booleans and discards unknown options', () 
 })
 
 test('runtime dictionaries exclude metadata and support additional languages', () => {
-  assert.deepEqual(Object.keys(locales).sort(), ['en', 'zh'])
+  assert.deepEqual(Object.keys(locales).sort(), ['de', 'en', 'zh'])
   assert.deepEqual(Object.keys(locales.en), Object.keys(locales.zh))
   assert.deepEqual(runtimeLocales({ fr: { meta: { title: 'Grille' }, 'settings.title': 'Grille', invalid: 1 } }), {
     fr: { 'settings.title': 'Grille' },
