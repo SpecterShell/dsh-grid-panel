@@ -67,7 +67,7 @@ jobs:
           }
           for (const entry of entries) {
             assert(!entry.split('/').includes('..'), 'Unexpected archive path: ' + entry)
-            assert(/^package\/(?:package\.json|LICENSE|README(?:\.zh)?\.md|cordis\.patch\.yml|icon\.svg|(?:lib|src|locale|docs)\/.*)$/.test(entry), 'Unexpected package file: ' + entry)
+            assert(/^package\/(?:package\.json|LICENSE|README(?:\.[a-z]+)?\.md|cordis\.patch\.yml|icon\.svg|(?:lib|src|locale|docs)\/.*)$/.test(entry), 'Unexpected package file: ' + entry)
           }
           const manifest = JSON.parse(execFileSync('tar', ['-xOf', archive, 'package/package.json'], { encoding: 'utf8' }))
           assert.equal(manifest.name, '@spectershell/dsh-grid-panel')
