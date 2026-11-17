@@ -58,5 +58,8 @@ jobs:
         uses: actions/download-artifact@v8
         with:
           name: dsh-grid-panel-${{ github.sha }}
-      - name: Publish with provenance
-        run: npm publish ./*.tgz --provenance --access public
+      # Staged publishing: the package is staged for later promotion instead
+      # of going live immediately. Promote it on npmjs.com or with
+      # `npm stage approve <id>`.
+      - name: Stage the package with provenance
+        run: npm stage publish ./*.tgz --provenance --access public
