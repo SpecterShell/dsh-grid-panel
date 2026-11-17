@@ -21,14 +21,35 @@ jobs:
     permissions:
       id-token: write
       attestations: write
+      contents: write
     steps:
       - uses: actions/download-artifact@v8
         with:
           name: dsh-grid-panel-${{ github.sha }}
       - name: Attest build provenance
+        id: attest
         uses: actions/attest-build-provenance@v4
         with:
           subject-path: '*.tgz'
+      # Attach the archive, the Sigstore bundle and its DSSE envelope to the
+      # GitHub release, so downloads can be verified offline and OpenSSF
+      # Scorecard finds signed release assets. See glsec/glsec#555.
+      - name: Attach the package and its attestation to the release
+        if: github.ref_type == 'tag'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          archive=$(ls ./*.tgz)
+          mv "$archive" "dsh-grid-panel-${version}.tgz"
+          cp "${{ steps.attest.outputs.bundle-path }}" "dsh-grid-panel-${version}.sigstore.json"
+          jq -c '.dsseEnvelope' "dsh-grid-panel-${version}.sigstore.json" > "dsh-grid-panel-${version}.intoto.jsonl"
+          gh release create "$GITHUB_REF_NAME" --prerelease --generate-notes || true
+          gh release upload "$GITHUB_REF_NAME" \
+            "dsh-grid-panel-${version}.tgz" \
+            "dsh-grid-panel-${version}.sigstore.json" \
+            "dsh-grid-panel-${version}.intoto.jsonl" \
+            --clobber
 
   publish:
     name: Publish to npm
