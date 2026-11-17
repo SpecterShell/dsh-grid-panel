@@ -7,6 +7,7 @@
  */
 import en from '../locale/en.json' with { type: 'json' }
 import zh from '../locale/zh.json' with { type: 'json' }
+import de from '../locale/de.json' with { type: 'json' }
 
 export type Locales = Record<string, Record<string, string>>
 
@@ -18,4 +19,4 @@ export function runtimeLocales(dictionaries: Record<string, Record<string, unkno
   ]))
 }
 
-export const locales = runtimeLocales({ en, zh })
+export const locales = runtimeLocales({ en, zh, de })

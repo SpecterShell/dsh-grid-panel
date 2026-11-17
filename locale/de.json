@@ -1,0 +1,27 @@
+{
+  "meta": {
+    "title": "Panel-Raster",
+    "description": "Globale Seitenleisten-Panels in einem kompakten, responsiven Raster anordnen"
+  },
+  "settings.title": "Panel-Raster",
+  "settings.description": "Kachelbreite, Abstand und Textausrichtung des Seitenleisten-Rasters.",
+  "settings.minTileSize": "Minimale Kachelbreite (px)",
+  "settings.minTileSizeHint": "Kleinste Spaltenbreite in der geöffneten Seitenleiste, 48 bis 160.",
+  "settings.compactTileSize": "Kompakte Kachelbreite (px)",
+  "settings.compactTileSizeHint": "Gilt bei Ansichtsbreiten bis 720 px.",
+  "settings.gap": "Abstand (px)",
+  "settings.gapHint": "Zwischenraum zwischen den Kacheln, 0 bis 16.",
+  "settings.labelAlign": "Textausrichtung",
+  "settings.labelAlignHint": "Wie der Text im Raum unter dem Symbol sitzt.",
+  "settings.labelAlignMiddle": "Mittig",
+  "settings.labelAlignTop": "Oben",
+  "settings.reload": "Änderungen werden beim nächsten Laden der Seite wirksam.",
+  "settings.save": "Speichern",
+  "settings.saving": "Speichern…",
+  "settings.saveFailed": "Die Werte wurden nicht akzeptiert. Korrigiere sie und speichere erneut.",
+  "settings.reset": "Zurücksetzen",
+  "settings.overridden": "Überschrieben",
+  "settings.invalidNumber": "Zahl eingeben oder für den Standardwert leer lassen.",
+  "settings.unavailable": "Dieses Plugin ist nicht geladen und kann nicht konfiguriert werden.",
+  "settings.readOnly": "Diese Installation speichert Einstellungen schreibgeschützt."
+}

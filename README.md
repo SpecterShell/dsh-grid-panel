@@ -1,6 +1,6 @@
 # @spectershell/dsh-grid-panel
 
-[简体中文](<README.zh.md>)
+[简体中文](<README.zh.md>) · [Deutsch](<README.de.md>)
 
 A plugin for DeepSeek Harness that arranges global sidebar panel launchers in a responsive grid.
 
@@ -20,8 +20,10 @@ Use the profile that serves your Web UI if it is not named `web`. Refresh the We
 
 The plugin's detail page on the Plugins panel carries a settings form while the plugin is installed. The changes apply the next time the page loads.
 
-- `minTileSize` (default `72`): minimum tile width in pixels, 48 to 160.
+- `minTileSize` (default `76`): minimum tile width in pixels, 48 to 160.
 - `compactTileSize` (default `68`): minimum tile width at viewport widths of 720 px or less.
+- `gap` (default `4`): space between tiles in pixels, 0 to 16.
+- `labelAlign` (default `middle`): label placement. `middle` centers the label in the space below the icon so text middles line up; `top` keeps first lines aligned.
 
 ## Development
 
