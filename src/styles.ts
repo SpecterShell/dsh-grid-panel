@@ -16,10 +16,10 @@ export function buildCss(options: GridPanelConfig = {}) {
   --dsh-grid-panel-min-tile: ${config.minTileSize}px;
   display: grid !important;
   grid-template-columns: repeat(auto-fit, minmax(var(--dsh-grid-panel-min-tile, 72px), 1fr));
+  /* Tiles share one row height; labels use the alignment option to decide
+     how they sit inside it. */
+  align-items: stretch;
   gap: 6px !important;
-  /* Tiles hug their content, so the 7 px above the icon always equals the
-     7 px below the label. Stretching the row would inflate the bottom gap. */
-  align-items: start;
 }
 nav[data-dsh-grid-panel="wide"] > * {
   position: relative;
@@ -58,7 +58,8 @@ nav[data-dsh-grid-panel="wide"] > * > button:first-child > span:first-child > [d
   transform: none !important;
 }
 /* Labels wrap to two lines and break anywhere, so long panel names cannot
-   stretch the column. */
+   stretch the column. In middle alignment the label centers in the space
+   below the icon, keeping text middles on one line. */
 nav[data-dsh-grid-panel="wide"] > button > span:not(:first-child),
 nav[data-dsh-grid-panel="wide"] > * > button:first-child > span:not(:first-child) {
   display: -webkit-box !important;
@@ -71,7 +72,11 @@ nav[data-dsh-grid-panel="wide"] > * > button:first-child > span:not(:first-child
   line-height: 1.25;
   white-space: normal !important;
   overflow-wrap: anywhere;
-}
+}${config.labelAlign === 'middle' ? `
+nav[data-dsh-grid-panel="wide"] > button > span:not(:first-child),
+nav[data-dsh-grid-panel="wide"] > * > button:first-child > span:not(:first-child) {
+  margin-block: auto;
+}` : ''}
 @media (max-width: 720px) {
   nav[data-dsh-grid-panel="wide"] {
     --dsh-grid-panel-min-tile: ${config.compactTileSize}px;

@@ -2,6 +2,11 @@ import assert from 'node:assert/strict'
 import test from 'node:test'
 import { buildCss } from '../src/styles.ts'
 
+test('centers labels in middle alignment and top-aligns them otherwise', () => {
+  assert.match(buildCss(), /margin-block: auto/)
+  assert.ok(!buildCss({ labelAlign: 'top' }).includes('margin-block'))
+})
+
 test('uses responsive defaults and resolved configuration overrides', () => {
   const css = buildCss()
   assert.match(css, /--dsh-grid-panel-min-tile: 72px/)

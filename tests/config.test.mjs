@@ -7,9 +7,12 @@ import { locales, runtimeLocales } from '../src/locales.ts'
 test('resolves defaults, boundaries, booleans and discards unknown options', () => {
   assert.deepEqual(resolveConfig(), defaults)
   assert.deepEqual(resolveConfig(null), defaults)
-  assert.deepEqual(resolveConfig({ minTileSize: 48, compactTileSize: 160, unknown: 3 }), {
-    minTileSize: 48, compactTileSize: 160,
+  assert.deepEqual(resolveConfig({ minTileSize: 48, compactTileSize: 160, labelAlign: 'top', unknown: 3 }), {
+    minTileSize: 48, compactTileSize: 160, labelAlign: 'top',
   })
+  assert.equal(resolveConfig({ labelAlign: 'middle' }).labelAlign, 'middle')
+  assert.equal(resolveConfig({ labelAlign: 'left' }).labelAlign, 'middle')
+  assert.equal(resolveConfig({ labelAlign: 0 }).labelAlign, 'middle')
   assert.equal(resolveConfig({ minTileSize: 72.5 }).minTileSize, 72.5)
   for (const value of [NaN, Infinity, -Infinity, 47, 161, '72', null, true]) {
     assert.equal(resolveConfig({ minTileSize: value }).minTileSize, 72)

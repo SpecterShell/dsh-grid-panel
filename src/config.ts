@@ -7,23 +7,30 @@
  * to `defaults`.
  */
 
+/** How the label sits in the space below the icon. */
+export type LabelAlign = 'top' | 'middle'
+
 /** User-supplied grid layout options. Every field falls back to `defaults`. */
 export interface GridPanelConfig {
   /** Minimum tile width in pixels for viewports wider than 720 px. */
   minTileSize?: number
   /** Minimum tile width in pixels at or below the 720 px compact breakpoint. */
   compactTileSize?: number
+  /** Label placement: top-aligned first lines, or centered to align text middles. */
+  labelAlign?: LabelAlign
 }
 
 /** Validated browser layout options. */
 export interface ResolvedGridPanelConfig {
   minTileSize: number
   compactTileSize: number
+  labelAlign: LabelAlign
 }
 
 export const defaults: Readonly<ResolvedGridPanelConfig> = Object.freeze({
   minTileSize: 72,
   compactTileSize: 68,
+  labelAlign: 'middle',
 })
 
 /** Resolve invalid values to their defaults and discard unknown options. */
@@ -36,5 +43,6 @@ export function resolveConfig(config: GridPanelConfig = {}): ResolvedGridPanelCo
   return {
     minTileSize: size(source.minTileSize, defaults.minTileSize),
     compactTileSize: size(source.compactTileSize, defaults.compactTileSize),
+    labelAlign: source.labelAlign === 'top' || source.labelAlign === 'middle' ? source.labelAlign : defaults.labelAlign,
   }
 }

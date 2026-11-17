@@ -10,8 +10,8 @@
  * client reads the new values on the next page load.
  */
 import { createElement as h } from 'react'
-import { SettingsForm, SettingsFormModel, SettingsValueField, settingsNumberField } from '@deepseek-ai/dsh-client-ui-primitives'
-import type { SettingsFormScope, SettingsFormShell, SettingsFieldState } from '@deepseek-ai/dsh-client-ui-primitives'
+import { SegmentedControl, SettingsForm, SettingsFormModel, SettingsValueField, settingsNumberField } from '@deepseek-ai/dsh-client-ui-primitives'
+import type { SettingsFieldSpec, SettingsFormScope, SettingsFormShell, SettingsFieldState } from '@deepseek-ai/dsh-client-ui-primitives'
 import type { ResolvedGridPanelConfig } from './config.ts'
 
 /** The slice of the client slots service this card uses. */
@@ -52,6 +52,14 @@ interface CardProps {
 interface CardState extends SettingsFormShell {
   minTileSize: SettingsFieldState
   compactTileSize: SettingsFieldState
+  labelAlign: SettingsFieldState
+}
+
+/** The label alignment choice, staged as the draft text "top" or "middle". */
+const labelAlignField: SettingsFieldSpec = {
+  field: 'labelAlign',
+  format: value => value === 'top' || value === 'middle' ? value : '',
+  parse: text => text === 'top' || text === 'middle' ? { kind: 'set', value: text } : undefined,
 }
 
 /**
@@ -61,10 +69,16 @@ interface CardState extends SettingsFormShell {
 const NAMESPACES = ['include:dsh-grid-panel', 'dsh-grid-panel']
 
 /**
- * The trailing note matches the form's hint metrics. Rendered with the card,
+ * The choice field repeats the SettingsValueField rhythm (12 px padding,
+ * hairline separator, 13 px label, 12 px hint) so it reads as one form, and
+ * the trailing note matches the form's hint metrics. Rendered with the card,
  * the style element leaves with it.
  */
 const STYLE = `
+.dsh-grid-panel-settings-field { padding: 12px 0; border-top: 0.5px solid var(--dsw-alias-border-l2); }
+.dsh-grid-panel-settings-head { display: flex; align-items: center; gap: 8px; }
+.dsh-grid-panel-settings-label { flex: 1; min-width: 0; font-size: 13px; font-weight: 500; line-height: 1.5; color: var(--dsw-alias-label-primary); }
+.dsh-grid-panel-settings-hint { margin: 4px 0 0; font-size: 12px; line-height: 1.5; color: var(--dsw-alias-label-tertiary); }
 .dsh-grid-panel-settings-note { margin: 12px 0 0; font-size: 12px; line-height: 1.5; color: var(--dsw-alias-label-tertiary); }
 `
 
@@ -100,6 +114,24 @@ function GridPanelCard(props: CardProps) {
       onEdit: text => props.edit(field, text),
       onReset: () => props.resetField(field),
     })),
+    h('div', { key: 'labelAlign', className: 'dsh-grid-panel-settings-field' }, [
+      h('div', { key: 'head', className: 'dsh-grid-panel-settings-head' }, [
+        h('span', { key: 'label', className: 'dsh-grid-panel-settings-label' }, t('settings.labelAlign')),
+        h(SegmentedControl, {
+          key: 'control',
+          id: 'dsh-grid-panel-labelAlign',
+          value: (state.labelAlign.text === 'top' ? 'top' : 'middle') as 'top' | 'middle',
+          options: [
+            { value: 'middle' as const, label: t('settings.labelAlignMiddle') },
+            { value: 'top' as const, label: t('settings.labelAlignTop') },
+          ],
+          label: t('settings.labelAlign'),
+          disabled: !state.writable || state.saving,
+          onChange: next => props.edit('labelAlign', next),
+        }),
+      ]),
+      h('p', { key: 'hint', className: 'dsh-grid-panel-settings-hint' }, t('settings.labelAlignHint')),
+    ]),
     h('p', { key: 'reload', className: 'dsh-grid-panel-settings-note' }, t('settings.reload')),
   ])
 }
@@ -121,11 +153,13 @@ export function mountSettingsCard(
     const form = new SettingsFormModel<ResolvedGridPanelConfig>(configForms.get(ns), [
       settingsNumberField('minTileSize'),
       settingsNumberField('compactTileSize'),
+      labelAlignField,
     ])
     const store = form.bind((): CardState => ({
       ...form.shell(),
       minTileSize: form.field('minTileSize'),
       compactTileSize: form.field('compactTileSize'),
+      labelAlign: form.field('labelAlign'),
     }))
     const disposeSlot = slots.inject('plugins.bundle.config', () => slots.register({
       name: 'plugins.bundle.config',

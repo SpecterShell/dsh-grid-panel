@@ -96,4 +96,12 @@ declare module '@deepseek-ai/dsh-client-ui-primitives' {
     onReset: () => void
   }): ReactNode
 
+  export function SegmentedControl<Value extends string>(props: {
+    id: string
+    value: Value
+    options: readonly { value: Value; label: string; disabled?: boolean; title?: string }[]
+    onChange: (next: Value) => void
+    label: string
+    disabled?: boolean
+  }): ReactNode
 }
