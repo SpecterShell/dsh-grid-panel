@@ -1,0 +1,17 @@
+name: Feature request / 功能建议
+description: Suggest a change to the plugin / 提出插件改进建议
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem are you trying to solve? / 想解决什么问题？
+      description: Describe the workflow and what currently gets in the way. / 请说明使用场景和目前遇到的困难。
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed change / 改进建议
+      description: Explain the behavior you want and any alternatives you tried. / 请说明期望的行为，以及尝试过的替代办法。
+    validations:
+      required: true

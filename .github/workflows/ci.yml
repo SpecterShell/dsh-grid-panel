@@ -1,0 +1,89 @@
+name: CI
+
+on:
+  push:
+    branches: ['**']
+  workflow_dispatch:
+  workflow_call:
+    inputs:
+      upload-artifact:
+        description: Upload the validated package archive
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: Node ${{ matrix.node }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        node: [22, 24]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 12.18.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: pnpm
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Typecheck
+        run: pnpm run typecheck
+      - name: Build and test
+        run: pnpm test
+      - name: Pack and validate archive
+        id: pack
+        shell: bash
+        run: |
+          npm pack --ignore-scripts --json --pack-destination "$RUNNER_TEMP" > "$RUNNER_TEMP/package-pack.json"
+          node --input-type=module <<'NODE'
+          import assert from 'node:assert/strict'
+          import { execFileSync } from 'node:child_process'
+          import { appendFileSync, readFileSync } from 'node:fs'
+          import { join } from 'node:path'
+
+          const [result] = JSON.parse(readFileSync(join(process.env.RUNNER_TEMP, 'package-pack.json'), 'utf8'))
+          const archive = join(process.env.RUNNER_TEMP, result.filename)
+          const entries = execFileSync('tar', ['-tzf', archive], { encoding: 'utf8' }).trim().split('\n')
+          const files = new Set(entries.filter((entry) => !entry.endsWith('/')))
+          for (const file of [
+            'package.json', 'lib/index.js', 'lib/index.d.ts', 'lib/client.js',
+            'cordis.patch.yml', 'icon.svg', 'LICENSE', 'README.md', 'README.zh.md',
+            'locale/en.json', 'locale/zh.json',
+          ]) {
+            assert(files.has('package/' + file), 'Missing package file: ' + file)
+          }
+          for (const entry of entries) {
+            assert(!entry.split('/').includes('..'), 'Unexpected archive path: ' + entry)
+            assert(/^package\/(?:package\.json|LICENSE|README(?:\.zh)?\.md|cordis\.patch\.yml|icon\.svg|(?:lib|src|locale|docs)\/.*)$/.test(entry), 'Unexpected package file: ' + entry)
+          }
+          const manifest = JSON.parse(execFileSync('tar', ['-xOf', archive, 'package/package.json'], { encoding: 'utf8' }))
+          assert.equal(manifest.name, '@spectershell/dsh-grid-panel')
+          assert.equal(manifest.repository.url, 'git+https://github.com/SpecterShell/dsh-grid-panel.git')
+          for (const entry of [manifest.main, manifest.types, manifest.exports['./client'], manifest.dsh.bundle.patch]) {
+            assert.equal(typeof entry, 'string', 'Missing package entry point')
+            assert(files.has('package/' + entry.replace(/^\.\//, '')), 'Missing entry point: ' + entry)
+          }
+          if (process.env.GITHUB_REF_TYPE === 'tag') {
+            assert.equal(process.env.GITHUB_REF_NAME, 'v' + manifest.version, 'Tag must match the package version')
+          }
+          appendFileSync(process.env.GITHUB_OUTPUT, 'archive=' + archive + '\n')
+          console.log('Validated ' + result.filename + ' (' + files.size + ' files)')
+          NODE
+      - name: Upload package artifact
+        if: ${{ inputs.upload-artifact && matrix.node == 24 }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: dsh-grid-panel-${{ github.sha }}
+          path: ${{ steps.pack.outputs.archive }}
+          if-no-files-found: error
+          retention-days: 14

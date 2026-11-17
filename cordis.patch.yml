@@ -1,0 +1,6 @@
+# Mount the no-op registration entry so DSH discovers the browser bundle.
+# `id` stays stable so user overlays can toggle it; `name` is the published
+# package name and must match package.json.
+- insert:
+    - id: dsh-grid-panel
+      name: '@spectershell/dsh-grid-panel'

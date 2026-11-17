@@ -1,0 +1,62 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check-and-package:
+    uses: ./.github/workflows/ci.yml
+    with:
+      upload-artifact: true
+
+  attest:
+    name: Attest package artifact
+    needs: check-and-package
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      attestations: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: dsh-grid-panel-${{ github.sha }}
+      - name: Attest build provenance
+        uses: actions/attest-build-provenance@v3
+        with:
+          subject-path: '*.tgz'
+
+  publish:
+    name: Publish to npm
+    needs: check-and-package
+    if: github.ref_type == 'tag'
+    runs-on: ubuntu-latest
+    environment: npm
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 12.18.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      # Trusted publishing (OIDC) requires npm 11.5.1 or later. The package
+      # must be linked to this repository and workflow on npmjs.com first.
+      - name: Update npm for trusted publishing
+        run: npm install --global npm@latest
+      - name: Download validated archive
+        uses: actions/download-artifact@v4
+        with:
+          name: dsh-grid-panel-${{ github.sha }}
+      - name: Publish with provenance
+        run: npm publish ./*.tgz --provenance --access public

@@ -1,0 +1,21 @@
+{
+  "meta": {
+    "title": "网格面板",
+    "description": "以紧凑的响应式网格排列全局侧边栏面板"
+  },
+  "settings.title": "网格面板",
+  "settings.description": "侧边栏网格的单元尺寸、布局说明与叠加控件限制。",
+  "settings.minTileSize": "最小单元宽度（px）",
+  "settings.minTileSizeHint": "展开侧边栏中网格列的最小宽度，48 至 160。",
+  "settings.compactTileSize": "紧凑单元宽度（px）",
+  "settings.compactTileSizeHint": "viewport 宽度不超过 720 px 时使用。",
+  "settings.reload": "更改将在下次加载页面时生效。",
+  "settings.save": "保存",
+  "settings.saving": "保存中…",
+  "settings.saveFailed": "设置未被接受，请修改后重新保存。",
+  "settings.reset": "恢复默认",
+  "settings.overridden": "已覆盖",
+  "settings.invalidNumber": "请输入数字，留空则使用默认值。",
+  "settings.unavailable": "该插件当前未加载，暂时无法配置。",
+  "settings.readOnly": "本部署的设置为只读。"
+}
