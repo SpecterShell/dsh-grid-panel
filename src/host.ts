@@ -28,6 +28,7 @@ interface Volatile<T> {
 export interface GridPanelVolatileConfig {
   minTileSize: Volatile<number>
   compactTileSize: Volatile<number>
+  gap: Volatile<number>
   labelAlign: Volatile<string>
 }
 
@@ -55,6 +56,9 @@ export const Config = z.object({
   compactTileSize: z.number().min(48).max(160).default(defaults.compactTileSize)
     .description('Minimum tile width in pixels at viewport widths of 720 px or less.')
     .volatile(),
+  gap: z.number().min(0).max(16).default(defaults.gap)
+    .description('Space between tiles in pixels.')
+    .volatile(),
   labelAlign: z.union(['top', 'middle']).default(defaults.labelAlign)
     .description('Vertical alignment of the tile label.')
     .volatile(),
@@ -74,6 +78,7 @@ export function apply(ctx: HostContext, config: GridPanelVolatileConfig) {
         const current: ResolvedGridPanelConfig = {
           minTileSize: config.minTileSize.get(),
           compactTileSize: config.compactTileSize.get(),
+          gap: config.gap.get(),
           labelAlign: config.labelAlign.get() === 'top' ? 'top' : 'middle',
         }
         res.setHeader('content-type', 'application/json; charset=utf-8')

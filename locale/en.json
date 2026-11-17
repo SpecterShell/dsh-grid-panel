@@ -18,6 +18,8 @@
   "settings.invalidNumber": "Enter a number, or leave blank to use the default.",
   "settings.unavailable": "This plugin is not loaded, so it cannot be configured right now.",
   "settings.readOnly": "This deployment stores settings read-only.",
+  "settings.gap": "Gap (px)",
+  "settings.gapHint": "Space between tiles, 0 to 16.",
   "settings.labelAlign": "Label alignment",
   "settings.labelAlignHint": "How the label sits in the space below the icon.",
   "settings.labelAlignMiddle": "Middle",

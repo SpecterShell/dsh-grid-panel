@@ -16,6 +16,8 @@ export interface GridPanelConfig {
   minTileSize?: number
   /** Minimum tile width in pixels at or below the 720 px compact breakpoint. */
   compactTileSize?: number
+  /** Space between tiles in pixels. */
+  gap?: number
   /** Label placement: top-aligned first lines, or centered to align text middles. */
   labelAlign?: LabelAlign
 }
@@ -24,12 +26,14 @@ export interface GridPanelConfig {
 export interface ResolvedGridPanelConfig {
   minTileSize: number
   compactTileSize: number
+  gap: number
   labelAlign: LabelAlign
 }
 
 export const defaults: Readonly<ResolvedGridPanelConfig> = Object.freeze({
-  minTileSize: 72,
+  minTileSize: 76,
   compactTileSize: 68,
+  gap: 4,
   labelAlign: 'middle',
 })
 
@@ -43,6 +47,9 @@ export function resolveConfig(config: GridPanelConfig = {}): ResolvedGridPanelCo
   return {
     minTileSize: size(source.minTileSize, defaults.minTileSize),
     compactTileSize: size(source.compactTileSize, defaults.compactTileSize),
+    gap: typeof source.gap === 'number' && Number.isFinite(source.gap) && source.gap >= 0 && source.gap <= 16
+      ? source.gap
+      : defaults.gap,
     labelAlign: source.labelAlign === 'top' || source.labelAlign === 'middle' ? source.labelAlign : defaults.labelAlign,
   }
 }

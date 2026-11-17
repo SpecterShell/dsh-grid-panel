@@ -18,6 +18,8 @@
   "settings.invalidNumber": "请输入数字，留空则使用默认值。",
   "settings.unavailable": "该插件当前未加载，暂时无法配置。",
   "settings.readOnly": "本部署的设置为只读。",
+  "settings.gap": "间距（px）",
+  "settings.gapHint": "单元之间的间距，0 至 16。",
   "settings.labelAlign": "标签对齐",
   "settings.labelAlignHint": "标签在图标下方的垂直对齐方式。",
   "settings.labelAlignMiddle": "居中",

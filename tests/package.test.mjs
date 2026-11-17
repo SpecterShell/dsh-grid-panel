@@ -24,18 +24,21 @@ test('package registers a settings-serving host entry and web-only locale-inject
 test('host Config materializes defaults and rejects out-of-range sizes', () => {
   const read = value => Object.fromEntries(Object.entries(value).map(([key, field]) => [key, field.get()]))
   assert.deepEqual(read(registration.Config({})), {
-    minTileSize: 72,
+    minTileSize: 76,
     compactTileSize: 68,
+    gap: 4,
     labelAlign: 'middle',
   })
-  assert.deepEqual(read(registration.Config({ minTileSize: 90, labelAlign: 'top' })), {
+  assert.deepEqual(read(registration.Config({ minTileSize: 90, gap: 8, labelAlign: 'top' })), {
     minTileSize: 90,
     compactTileSize: 68,
+    gap: 8,
     labelAlign: 'top',
   })
   assert.throws(() => registration.Config({ minTileSize: 47 }))
   assert.throws(() => registration.Config({ compactTileSize: 161 }))
   assert.throws(() => registration.Config({ compactTileSize: '68' }))
+  assert.throws(() => registration.Config({ gap: 17 }))
   assert.throws(() => registration.Config({ labelAlign: 'left' }))
 })
 
@@ -46,7 +49,7 @@ test('host entry serves the live config over the exact route', () => {
   const injected = { webServer, effect: (setup, label) => effects.push([setup, label]) }
   const ctx = { inject: (deps, callback) => (assert.deepEqual(deps, ['webServer']), callback(injected)) }
   // Volatile fields arrive as get() wrappers, and edits apply without a restart.
-  const live = { minTileSize: 88, compactTileSize: 68, labelAlign: 'middle' }
+  const live = { minTileSize: 88, compactTileSize: 68, gap: 4, labelAlign: 'middle' }
   const config = Object.fromEntries(Object.entries(live).map(([key, value]) => [key, { get: () => live[key] }]))
   registration.apply(ctx, config)
   assert.equal(effects.length, 1)

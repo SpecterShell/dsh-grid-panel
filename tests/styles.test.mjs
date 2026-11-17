@@ -9,11 +9,14 @@ test('centers labels in middle alignment and top-aligns them otherwise', () => {
 
 test('uses responsive defaults and resolved configuration overrides', () => {
   const css = buildCss()
-  assert.match(css, /--dsh-grid-panel-min-tile: 72px/)
+  assert.match(css, /--dsh-grid-panel-min-tile: 76px/)
   assert.match(css, /--dsh-grid-panel-min-tile: 68px/)
-  assert.ok(css.includes('repeat(auto-fit, minmax(var(--dsh-grid-panel-min-tile, 72px), 1fr))'))
+  assert.ok(css.includes('repeat(auto-fit, minmax(var(--dsh-grid-panel-min-tile, 76px), 1fr))'))
   assert.match(css, /max-width: 720px/)
   assert.match(css, /prefers-reduced-motion/)
+  assert.match(css, /gap: 4px/)
+  assert.match(buildCss({ gap: 0 }), /gap: 0px/)
+  assert.match(buildCss({ gap: 12 }), /gap: 12px/)
   assert.match(buildCss({ minTileSize: 88, compactTileSize: 80 }), /min-tile: 88px/)
   assert.match(buildCss({ minTileSize: 88, compactTileSize: 80 }), /min-tile: 80px/)
 })

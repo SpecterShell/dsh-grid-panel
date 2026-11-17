@@ -15,11 +15,11 @@ export function buildCss(options: GridPanelConfig = {}) {
   return `nav[data-dsh-grid-panel="wide"] {
   --dsh-grid-panel-min-tile: ${config.minTileSize}px;
   display: grid !important;
-  grid-template-columns: repeat(auto-fit, minmax(var(--dsh-grid-panel-min-tile, 72px), 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(var(--dsh-grid-panel-min-tile, 76px), 1fr));
   /* Tiles share one row height; labels use the alignment option to decide
      how they sit inside it. */
   align-items: stretch;
-  gap: 6px !important;
+  gap: ${config.gap}px !important;
 }
 nav[data-dsh-grid-panel="wide"] > * {
   position: relative;

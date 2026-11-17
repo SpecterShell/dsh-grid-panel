@@ -52,6 +52,7 @@ interface CardProps {
 interface CardState extends SettingsFormShell {
   minTileSize: SettingsFieldState
   compactTileSize: SettingsFieldState
+  gap: SettingsFieldState
   labelAlign: SettingsFieldState
 }
 
@@ -100,7 +101,7 @@ function GridPanelCard(props: CardProps) {
     onDiscard: props.discard,
   }, [
     h('style', { key: 'style' }, STYLE),
-    ...(['minTileSize', 'compactTileSize'] as const).map(field => h(SettingsValueField, {
+    ...(['minTileSize', 'compactTileSize', 'gap'] as const).map(field => h(SettingsValueField, {
       key: field,
       id: `dsh-grid-panel-${field}`,
       label: t(`settings.${field}`),
@@ -153,12 +154,14 @@ export function mountSettingsCard(
     const form = new SettingsFormModel<ResolvedGridPanelConfig>(configForms.get(ns), [
       settingsNumberField('minTileSize'),
       settingsNumberField('compactTileSize'),
+      settingsNumberField('gap'),
       labelAlignField,
     ])
     const store = form.bind((): CardState => ({
       ...form.shell(),
       minTileSize: form.field('minTileSize'),
       compactTileSize: form.field('compactTileSize'),
+      gap: form.field('gap'),
       labelAlign: form.field('labelAlign'),
     }))
     const disposeSlot = slots.inject('plugins.bundle.config', () => slots.register({
