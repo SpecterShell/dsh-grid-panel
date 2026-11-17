@@ -17,7 +17,9 @@ export function buildCss(options: GridPanelConfig = {}) {
   display: grid !important;
   grid-template-columns: repeat(auto-fit, minmax(var(--dsh-grid-panel-min-tile, 72px), 1fr));
   gap: 6px !important;
-  align-items: stretch;
+  /* Tiles hug their content, so the 7 px above the icon always equals the
+     7 px below the label. Stretching the row would inflate the bottom gap. */
+  align-items: start;
 }
 nav[data-dsh-grid-panel="wide"] > * {
   position: relative;
@@ -27,7 +29,6 @@ nav[data-dsh-grid-panel="wide"] > button,
 nav[data-dsh-grid-panel="wide"] > * > button:first-child {
   width: 100% !important;
   min-width: 0 !important;
-  min-height: 54px;
   height: auto !important;
   padding: 7px 6px !important;
   flex-direction: column !important;
@@ -83,13 +84,14 @@ nav[data-dsh-grid-panel="wide"] > * > button:first-child > span:not(:first-child
   }
 }
 /* Extra row buttons and guarded overlays share the same 24 x 24 px corner
-   box, so the tile center stays a launcher target. */
+   box, pinned top-left so it never collides with the badge at the top
+   right of the glyph. The tile center stays a launcher target. */
 nav[data-dsh-grid-panel="wide"] > * > button:not(:first-child),
 nav[data-dsh-grid-panel="wide"] [data-dsh-grid-panel-overlay="corner"] {
   position: absolute !important;
   top: 2px !important;
-  right: 2px !important;
-  left: auto !important;
+  right: auto !important;
+  left: 2px !important;
   width: 24px !important;
   height: 24px !important;
   min-width: 0 !important;
