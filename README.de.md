@@ -4,7 +4,7 @@
 
 Ein Plugin für DeepSeek Harness, das die Panel-Starter der globalen Seitenleiste in einem responsiven Raster anordnet.
 
-![Geöffnete Seitenleiste mit Logozeile in einem englischen DSH-0.2.2-rc.1-Profil](<docs/images/sidebar-expanded.en.png>)
+![Geöffnete Seitenleiste mit Logozeile in einem deutschen DSH-0.2.2-rc.1-Profil](<docs/images/sidebar-expanded.de.png>)
 
 ## Installation
 
