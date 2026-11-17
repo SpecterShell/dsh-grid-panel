@@ -24,6 +24,8 @@ test('uses responsive defaults and resolved configuration overrides', () => {
 test('scopes wrapped tile styles and keeps extra controls in the corner', () => {
   const css = buildCss()
   assert.ok(css.includes('> * > button:first-child {'))
+  assert.ok(css.includes('> *:not(button)'))
+  assert.ok(css.includes('flex: 1 1 auto'))
   assert.ok(!css.includes('> * > button {'))
   assert.ok(css.includes('> * > button:first-child > span:first-child'))
   // Top-aligned content keeps every icon on one line when a label wraps.

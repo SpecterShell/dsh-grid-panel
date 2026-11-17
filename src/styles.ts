@@ -25,6 +25,15 @@ nav[data-dsh-grid-panel="wide"] > * {
   position: relative;
   min-width: 0;
 }
+/* Wrapped rows stretch with the grid; their launcher fills the cell so its
+   icon and label lay out like a direct tile. */
+nav[data-dsh-grid-panel="wide"] > *:not(button) {
+  display: flex;
+  flex-direction: column;
+}
+nav[data-dsh-grid-panel="wide"] > * > button:first-child {
+  flex: 1 1 auto;
+}
 nav[data-dsh-grid-panel="wide"] > button,
 nav[data-dsh-grid-panel="wide"] > * > button:first-child {
   width: 100% !important;
